@@ -53,6 +53,13 @@ def init_db():
                     description TEXT,
                     entry_date TEXT NOT NULL,
                     FOREIGN KEY(church_id) REFERENCES churches(id)
+
+    c.execute('''CREATE TABLE IF NOT EXISTS finances (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    type TEXT NOT NULL,  -- income or expense
+                    amount REAL NOT NULL,
+                    description TEXT,
+                    entry_date TEXT NOT NULL
                 )''')
     c.execute('''CREATE TABLE IF NOT EXISTS certificates (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -154,6 +161,15 @@ def add_finance(args):
                  VALUES (?, ?, ?, ?, ?)''',
               (args.church_id, args.type, args.amount, args.description,
                args.entry_date or date.today().isoformat()))
+
+# Finances
+
+def record_finance(args):
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    c.execute('''INSERT INTO finances (type, amount, description, entry_date)
+                 VALUES (?, ?, ?, ?)''',
+              (args.type, args.amount, args.description, args.entry_date or date.today().isoformat()))
     conn.commit()
     conn.close()
     print('Financial entry recorded.')
@@ -228,6 +244,7 @@ def delete_finance(args):
     conn.commit()
     conn.close()
     print('Finance entry deleted.')
+
 
 # Certificates
 
@@ -309,6 +326,13 @@ def main():
     parser_delete_fin.add_argument('id', type=int)
     parser_delete_fin.add_argument('church_id', type=int)
     parser_delete_fin.set_defaults(func=delete_finance)
+
+    parser_finance = subparsers.add_parser('finance', help='Record financial entry')
+    parser_finance.add_argument('type', choices=['income', 'expense'])
+    parser_finance.add_argument('amount', type=float)
+    parser_finance.add_argument('--description', default='')
+    parser_finance.add_argument('--entry-date', dest='entry_date')
+    parser_finance.set_defaults(func=record_finance)
 
     parser_cert = subparsers.add_parser('certificate', help='Issue certificate for a member')
     parser_cert.add_argument('member_id', type=int)
