@@ -1,6 +1,7 @@
 # ChurchI-Don
 
 
+
 Este repositorio contiene un ejemplo de Sistema de Administración para Iglesias (Church Management System) de uso local.
 
 El script `chms.py` implementa una base de datos SQLite y una interfaz de línea de comandos para registrar miembros, grupos, finanzas y certificados.
@@ -16,6 +17,9 @@ El script `chms.py` implementa una base de datos SQLite y una interfaz de línea
 ```bash
 python3 chms.py init
 ```
+
+2. Agregue un miembro:
+
 
 2. Agregue una iglesia:
 
@@ -68,6 +72,8 @@ python3 chms.py init
 python3 chms.py add-member Juan Perez --email jperez@example.com --phone 555-1234
 ```
 
+3. Liste los miembros registrados:
+
 
 4. Liste los miembros registrados:
 
@@ -77,6 +83,8 @@ python3 chms.py add-member Juan Perez --email jperez@example.com --phone 555-123
 ```bash
 python3 chms.py list-members
 ```
+
+4. Registre un estatus de crecimiento espiritual para un miembro:
 
 
 5. Registre un estatus de crecimiento espiritual para un miembro:
@@ -88,6 +96,8 @@ python3 chms.py list-members
 python3 chms.py add-growth 1 "Bautizado" --status-date 2024-05-18
 ```
 
+5. Cree un grupo y asigne un miembro:
+
 
 6. Cree un grupo y asigne un miembro:
 5. Cree un grupo y asigne un miembro:
@@ -97,6 +107,7 @@ python3 chms.py add-growth 1 "Bautizado" --status-date 2024-05-18
 python3 chms.py add-group "Grupo Juvenil" --zone Norte
 python3 chms.py assign-member 1 1
 ```
+
 
 7. Registre un ingreso o egreso:
 
@@ -145,6 +156,34 @@ python3 chms.py certificate 1 Bautismo
 ```
 
 La base de datos `chms.db` se guarda en el mismo directorio y puede ser consultada con cualquier cliente SQLite.
+
+Este ejemplo es una base sencilla que puede ampliarse para incluir autenticación, interfaz web u otras funcionalidades propias de un ChMS completo.
+
+## Servidor Express
+
+Se incluye un servidor de ejemplo en `server/` que expone una API protegida con JWT para manejar registros financieros.
+
+### Instalación
+
+En la carpeta `server` instale las dependencias y arranque el servicio:
+
+```bash
+cd server
+npm install
+node index.js
+```
+
+### Endpoints de Finanzas
+
+Todas las rutas requieren un token JWT obtenido desde `/api/login`.
+
+- `POST /api/finances` – crea un registro financiero.
+- `GET /api/finances` – lista los registros de la iglesia del usuario.
+- `GET /api/finances/:id` – obtiene un registro específico.
+- `PUT /api/finances/:id` – actualiza un registro.
+- `DELETE /api/finances/:id` – elimina un registro.
+
+La autenticación simple de demostración acepta `admin` / `password` y asigna `churchId` 1 al token.
 
 Este ejemplo se puede ampliar para incluir más módulos o una interfaz web completa.
 

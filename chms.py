@@ -37,6 +37,7 @@ def init_db():
                     FOREIGN KEY(group_id) REFERENCES groups(id),
                     FOREIGN KEY(member_id) REFERENCES members(id)
                 )''')
+
     c.execute('DROP TABLE IF EXISTS finances')
     c.execute('DROP TABLE IF EXISTS churches')
 
@@ -124,6 +125,7 @@ def assign_member(args):
     conn.close()
     print('Member assigned to group.')
 
+
 # Churches
 
 def add_church(args):
@@ -173,6 +175,7 @@ def record_finance(args):
     conn.commit()
     conn.close()
     print('Financial entry recorded.')
+
 
 
 def list_finances(args):
@@ -293,6 +296,7 @@ def main():
     parser_assign.add_argument('group_id', type=int)
     parser_assign.add_argument('member_id', type=int)
     parser_assign.set_defaults(func=assign_member)
+
 
     parser_add_church = subparsers.add_parser('add-church', help='Add a new church')
     parser_add_church.add_argument('name')
